@@ -59,6 +59,7 @@ export class RegistrationPageComponent implements OnInit {
       this.submitted = true;
       return;
     }
+    // keep-localization-pattern: ^customer\..*\.error$
     this.registrationFormConfiguration.submitRegistrationForm(this.form, this.registrationConfig, this.model);
   }
 

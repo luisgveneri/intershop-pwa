@@ -5,20 +5,25 @@ const { execSync } = require('child_process');
 
 const localizationFile_default = 'src/assets/i18n/en_US.json';
 
-// regular expression for patterns of not explicitly used localization keys (dynamic created keys, error keys from REST calls)
-// ADDITIONAL PATTERNS HAVE TO BE ADDED HERE
-const regExps = [
-  /^account\.login\..*\.message/i,
-  /^subject.*/i,
-  /.*budget.period..*/i,
-  /.*\.error.*/i,
-  /^locale\..*/i,
-  /^approval\.order_.*\.text/i,
-];
-
 // store localizations from default localization file in an object
 const localizations_default = JSON.parse(fs.readFileSync(localizationFile_default, 'utf8'));
 console.log('Clean up file', localizationFile_default, 'as default localization file');
+
+// go through directory recursively and find files to be searched
+const filesToBeSearched = glob.sync('{src,projects}/**/!(*.spec).{ts,html}');
+
+// collect annotated patterns to keep
+const regExps = [];
+filesToBeSearched.forEach(filePath => {
+  const fileContent = fs.readFileSync(filePath, { encoding: 'utf-8' });
+  if (fileContent.includes('keep-localization-pattern:')) {
+    const regex = /keep-localization-pattern:(.*)/g;
+    for (let match; (match = regex.exec(fileContent)); ) {
+      keeper = match[1].replace('-->', '').replace('*/', '').trim();
+      regExps.push(new RegExp(keeper));
+    }
+  }
+});
 
 // add not explicitly used localization keys with their localization values
 const localizationsFound = {};
@@ -29,14 +34,11 @@ Object.keys(localizations_default)
     delete localizations_default[localizationKey];
   });
 
-// go through directory recursively and find files to be searched
-const filesToBeSearched = glob.sync('{src,projects}/**/!(*.spec).{ts,html}');
-
 const regex = _.memoize(key => new RegExp(`[^.-]\\b${key.replace(/[.]/g, '\\$&')}\\b[^.-]`));
 
 // add used localization keys with their localization values
 filesToBeSearched.forEach(filePath => {
-  const fileContent = fs.readFileSync(filePath);
+  const fileContent = fs.readFileSync(filePath, { encoding: 'utf-8' });
   for (const localizationKey in localizations_default) {
     if (regex(localizationKey).test(fileContent)) {
       // store found localizations
