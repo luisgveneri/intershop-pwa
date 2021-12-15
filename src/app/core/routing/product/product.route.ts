@@ -30,7 +30,7 @@ function generateProductSlug(product: ProductView) {
   return slug;
 }
 
-const productRouteFormat = new RegExp('^/(.*)?sku(.*?)(-cat(.*))?$');
+const productRouteFormat = new RegExp('^/(.*-)?sku(.*?)(-cat(.*))?$');
 
 export function matchProductRoute(segments: UrlSegment[]): UrlMatchResult {
   // compatibility to old routes
