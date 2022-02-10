@@ -5,7 +5,7 @@ import { ActionReducerMap, StoreConfig, StoreModule } from '@ngrx/store';
 import { pick } from 'lodash-es';
 
 import { DATA_RETENTION_POLICY } from 'ish-core/configurations/injection-keys';
-import { DataRetentionPolicy, dataRetentionMeta } from 'ish-core/utils/meta-reducers';
+import { DataRetentionPolicy, dataRetentionMeta, resetPersonalizedDataMeta } from 'ish-core/utils/meta-reducers';
 
 import { CategoriesEffects } from './categories/categories.effects';
 import { categoriesReducer } from './categories/categories.reducer';
@@ -15,6 +15,8 @@ import { FilterEffects } from './filter/filter.effects';
 import { filterReducer } from './filter/filter.reducer';
 import { ProductListingEffects } from './product-listing/product-listing.effects';
 import { productListingReducer } from './product-listing/product-listing.reducer';
+import { ProductPricesEffects } from './product-prices/product-prices.effects';
+import { productPricesReducer } from './product-prices/product-prices.reducer';
 import { ProductsEffects } from './products/products.effects';
 import { productsReducer } from './products/products.reducer';
 import { PromotionsEffects } from './promotions/promotions.effects';
@@ -34,6 +36,7 @@ const shoppingReducers: ActionReducerMap<ShoppingState> = {
   filter: filterReducer,
   promotions: promotionsReducer,
   productListing: productListingReducer,
+  productPrices: productPricesReducer,
 };
 
 const shoppingEffects = [
@@ -45,6 +48,7 @@ const shoppingEffects = [
   FilterEffects,
   PromotionsEffects,
   ProductListingEffects,
+  ProductPricesEffects,
 ];
 
 @Injectable()
@@ -52,6 +56,7 @@ export class DefaultShoppingStoreConfig implements StoreConfig<ShoppingState> {
   metaReducers = [
     dataRetentionMeta<ShoppingState>(this.dataRetention.compare, this.appBaseHref, 'shopping', '_compare'),
     dataRetentionMeta<ShoppingState>(this.dataRetention.recently, this.appBaseHref, 'shopping', '_recently'),
+    resetPersonalizedDataMeta,
   ];
 
   constructor(

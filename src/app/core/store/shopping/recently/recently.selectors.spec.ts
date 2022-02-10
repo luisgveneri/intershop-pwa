@@ -6,6 +6,7 @@ import { flatten } from 'lodash-es';
 
 import { Product, VariationProduct, VariationProductMaster } from 'ish-core/models/product/product.model';
 import { CoreStoreModule } from 'ish-core/store/core/core-store.module';
+import { CustomerStoreModule } from 'ish-core/store/customer/customer-store.module';
 import { loadProductSuccess, loadProductVariationsSuccess } from 'ish-core/store/shopping/products';
 import { ShoppingStoreModule } from 'ish-core/store/shopping/shopping-store.module';
 import { StoreWithSnapshots, provideStoreSnapshots } from 'ish-core/utils/dev/ngrx-testing';
@@ -26,8 +27,9 @@ describe('Recently Selectors', () => {
       declarations: [DummyComponent],
       imports: [
         CoreStoreModule.forTesting(['router', 'configuration', 'serverConfig'], [RecentlyEffects]),
+        CustomerStoreModule.forTesting('user'),
         RouterTestingModule.withRoutes([{ path: 'product/:sku', component: DummyComponent }]),
-        ShoppingStoreModule.forTesting('_recently', 'categories', 'products'),
+        ShoppingStoreModule.forTesting('_recently', 'categories', 'products', 'productPrices'),
       ],
       providers: [provideStoreSnapshots()],
     });

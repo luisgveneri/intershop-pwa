@@ -30,6 +30,7 @@ import {
   getProductListingViewType,
   loadMoreProducts,
 } from 'ish-core/store/shopping/product-listing';
+import { loadProductPriceIfNotLoaded } from 'ish-core/store/shopping/product-prices';
 import {
   getProduct,
   getProductLinks,
@@ -93,7 +94,8 @@ export class ShoppingFacade {
       switchMap(plainSKU =>
         this.store.pipe(
           select(getProduct(plainSKU)),
-          filter(p => ProductHelper.isReadyForDisplay(p, completenessLevel))
+          filter(p => ProductHelper.isReadyForDisplay(p, completenessLevel)),
+          tap(() => this.store.dispatch(loadProductPriceIfNotLoaded({ sku: plainSKU })))
         )
       )
     );

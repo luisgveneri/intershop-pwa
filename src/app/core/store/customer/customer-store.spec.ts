@@ -9,7 +9,6 @@ import { Basket } from 'ish-core/models/basket/basket.model';
 import { Credentials } from 'ish-core/models/credentials/credentials.model';
 import { Customer } from 'ish-core/models/customer/customer.model';
 import { LineItem } from 'ish-core/models/line-item/line-item.model';
-import { Price } from 'ish-core/models/price/price.model';
 import { Product, ProductCompletenessLevel } from 'ish-core/models/product/product.model';
 import { Promotion } from 'ish-core/models/promotion/promotion.model';
 import { User } from 'ish-core/models/user/user.model';
@@ -23,6 +22,7 @@ import { FilterService } from 'ish-core/services/filter/filter.service';
 import { OrderService } from 'ish-core/services/order/order.service';
 import { PaymentService } from 'ish-core/services/payment/payment.service';
 import { PersonalizationService } from 'ish-core/services/personalization/personalization.service';
+import { PricesService } from 'ish-core/services/prices/prices.service';
 import { ProductsService } from 'ish-core/services/products/products.service';
 import { PromotionsService } from 'ish-core/services/promotions/promotions.service';
 import { SuggestService } from 'ish-core/services/suggest/suggest.service';
@@ -66,8 +66,6 @@ describe('Customer Store', () => {
     minOrderQuantity: 1,
     attributes: [],
     images: [],
-    listPrice: {} as Price,
-    salePrice: {} as Price,
     manufacturer: 'test',
     readyForShipmentMin: 1,
     readyForShipmentMax: 1,
@@ -153,6 +151,9 @@ describe('Customer Store', () => {
     const orderServiceMock = mock(OrderService);
     const authorizationServiceMock = mock(AuthorizationService);
 
+    const productPriceServiceMock = mock(PricesService);
+    when(productPriceServiceMock.getProductPrices(anything(), anything())).thenReturn(of([]));
+
     TestBed.configureTestingModule({
       declarations: [DummyComponent],
       imports: [
@@ -187,6 +188,7 @@ describe('Customer Store', () => {
         { provide: AuthorizationService, useFactory: () => instance(authorizationServiceMock) },
         { provide: SuggestService, useFactory: () => instance(mock(SuggestService)) },
         { provide: CookiesService, useFactory: () => instance(mock(CookiesService)) },
+        { provide: PricesService, useFactory: () => instance(productPriceServiceMock) },
       ],
     });
 
@@ -216,6 +218,8 @@ describe('Customer Store', () => {
             [Basket] Add Product:
               sku: "test"
               quantity: 1
+            [Products API] Load Product Prices Success:
+              prices: []
             [Basket Internal] Add Items To Basket:
               items: [{"sku":"test","quantity":1,"unit":"pcs."}]
             [Basket API] Add Items To Basket Success:
