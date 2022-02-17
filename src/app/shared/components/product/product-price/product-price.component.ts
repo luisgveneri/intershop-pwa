@@ -4,7 +4,8 @@ import { map } from 'rxjs/operators';
 
 import { ProductContextFacade } from 'ish-core/facades/product-context.facade';
 import { Price, PriceHelper } from 'ish-core/models/price/price.model';
-import { Product, ProductHelper } from 'ish-core/models/product/product.model';
+import { ProductView } from 'ish-core/models/product-view/product-view.model';
+import { ProductHelper } from 'ish-core/models/product/product.model';
 
 @Component({
   selector: 'ish-product-price',
@@ -24,7 +25,8 @@ export class ProductPriceComponent implements OnInit {
       priceSavings: Price;
       lowerPrice: Price;
       upperPrice: Price;
-    } & Pick<Product, 'salePrice' | 'listPrice'>
+      scaledPrices: Price[];
+    } & Pick<ProductView, 'salePrice' | 'listPrice'>
   >;
 
   constructor(private context: ProductContextFacade) {}
@@ -37,6 +39,7 @@ export class ProductPriceComponent implements OnInit {
 
     this.data$ = this.context.select('product').pipe(
       map(product => ({
+        scaledPrices: [{ type: 'Money', value: 397.13, currency: 'USD', minQuantity: 1 }],
         salePrice: product.salePrice,
         listPrice: product.listPrice,
         isListPriceGreaterThanSalePrice: product.listPrice?.value > product.salePrice?.value,
