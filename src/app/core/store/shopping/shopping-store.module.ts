@@ -5,7 +5,7 @@ import { ActionReducerMap, StoreConfig, StoreModule } from '@ngrx/store';
 import { pick } from 'lodash-es';
 
 import { DATA_RETENTION_POLICY } from 'ish-core/configurations/injection-keys';
-import { DataRetentionPolicy, dataRetentionMeta } from 'ish-core/utils/meta-reducers';
+import { DataRetentionPolicy, dataRetentionMeta, resetPersonalizedShoppingMeta } from 'ish-core/utils/meta-reducers';
 
 import { CategoriesEffects } from './categories/categories.effects';
 import { categoriesReducer } from './categories/categories.reducer';
@@ -52,6 +52,7 @@ export class DefaultShoppingStoreConfig implements StoreConfig<ShoppingState> {
   metaReducers = [
     dataRetentionMeta<ShoppingState>(this.dataRetention.compare, this.appBaseHref, 'shopping', '_compare'),
     dataRetentionMeta<ShoppingState>(this.dataRetention.recently, this.appBaseHref, 'shopping', '_recently'),
+    resetPersonalizedShoppingMeta,
   ];
 
   constructor(
