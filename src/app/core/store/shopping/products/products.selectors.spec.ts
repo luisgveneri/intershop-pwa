@@ -121,6 +121,7 @@ describe('Products Selectors', () => {
             "failed": true,
             "listPrice": undefined,
             "salePrice": undefined,
+            "scaledPrices": undefined,
             "sku": "invalid",
           }
         `);
@@ -330,6 +331,7 @@ describe('Products Selectors', () => {
             "defaultVariationSKU": "VAR",
             "listPrice": undefined,
             "salePrice": undefined,
+            "scaledPrices": undefined,
             "sku": "SKU",
             "type": "VariationProductMaster",
             "variations": Array [
