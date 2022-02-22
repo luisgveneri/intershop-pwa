@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { SelectOption } from 'ish-core/models/select-option/select-option.model';
-import { FormsService } from 'ish-shared/forms/utils/forms.service';
+import { ReusableFormlyFieldConfigurationsService } from 'ish-shared/formly/reusable-configurations/reusable-formly-field-configurations.service';
 import { SpecialValidators } from 'ish-shared/forms/validators/special-validators';
 
 import { B2bUser } from '../../models/b2b-user/b2b-user.model';
@@ -26,11 +26,10 @@ export class UserProfileFormComponent implements OnInit {
 
   titleOptions$: Observable<SelectOption[]>;
 
-  constructor(private formsService: FormsService) {}
+  constructor(private reusableFormlyFieldConfigurationsService: ReusableFormlyFieldConfigurationsService) {}
 
   ngOnInit() {
     // determine default language from session and available locales
-    this.titleOptions$ = this.formsService.getSalutationOptions();
 
     this.model = this.getModel(this.user);
     this.fields = this.getFields();
@@ -45,15 +44,7 @@ export class UserProfileFormComponent implements OnInit {
       {
         type: 'ish-fieldset-field',
         fieldGroup: [
-          {
-            key: 'title',
-            type: 'ish-select-field',
-            templateOptions: {
-              label: 'account.default_address.title.label',
-              placeholder: 'account.option.select.text',
-              options: this.titleOptions$,
-            },
-          },
+          this.reusableFormlyFieldConfigurationsService.getConfiguration('title'),
           {
             key: 'firstName',
             type: 'ish-text-input-field',

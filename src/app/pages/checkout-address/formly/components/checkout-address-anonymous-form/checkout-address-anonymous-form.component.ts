@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { FeatureToggleService } from 'ish-core/feature-toggle.module';
+import { ReusableFormlyFieldConfigurationsService } from 'ish-shared/formly/reusable-configurations/reusable-formly-field-configurations.service';
 
 @Component({
   selector: 'ish-checkout-address-anonymous-form',
@@ -32,7 +33,10 @@ export class CheckoutAddressAnonymousFormComponent implements OnInit, OnDestroy 
     return this.form && this.form.get('shipOption').value === 'shipToDifferentAddress';
   }
 
-  constructor(private featureToggleService: FeatureToggleService) {}
+  constructor(
+    private featureToggleService: FeatureToggleService,
+    private reusableFormlyFieldConfigurationService: ReusableFormlyFieldConfigurationsService
+  ) {}
 
   ngOnInit() {
     this.addressFields = [
@@ -98,15 +102,7 @@ export class CheckoutAddressAnonymousFormComponent implements OnInit, OnDestroy 
   private createTaxationIDField(): FormlyFieldConfig {
     return {
       type: 'ish-fieldset-field',
-      fieldGroup: [
-        {
-          key: 'taxationID',
-          type: 'ish-text-input-field',
-          templateOptions: {
-            label: 'account.address.taxation.label',
-          },
-        },
-      ],
+      fieldGroup: [this.reusableFormlyFieldConfigurationService.getConfiguration('taxationID')],
     };
   }
 
