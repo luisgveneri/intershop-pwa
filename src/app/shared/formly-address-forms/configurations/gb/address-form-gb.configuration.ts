@@ -5,10 +5,8 @@ import { pick } from 'lodash-es';
 import { of } from 'rxjs';
 
 import { Address } from 'ish-core/models/address/address.model';
-import {
-  AddressFormConfiguration,
-  addressesFieldConfiguration,
-} from 'ish-shared/formly-address-forms/configurations/address-form.configuration';
+import { AddressFormConfiguration } from 'ish-shared/formly-address-forms/configurations/address-form.configuration';
+import { addressesFieldConfiguration } from 'ish-shared/formly-address-forms/formly-address-forms.utils';
 import { FormsService } from 'ish-shared/forms/utils/forms.service';
 
 @Injectable()
